@@ -1,4 +1,4 @@
-Desktop Entry]
+[Desktop Entry]
 Type=Application
 Name=[ifconfig.desktop]
 Exec= lxterminal --command="watch -n 10 ifconfig"
