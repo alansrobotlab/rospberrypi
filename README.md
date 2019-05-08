@@ -80,7 +80,7 @@ ___
     ```
 6. Run the bootstrap script and go get a cup of coffee.
    ```sh
-   sudo sh bootstrap.sh
+   sh bootstrap.sh
    ```
 7. Review the results of the bootstrap script, looking for any errors
 8. Carefully read the last lines of the bootstrap script.

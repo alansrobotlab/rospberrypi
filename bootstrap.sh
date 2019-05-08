@@ -21,9 +21,11 @@ if ! [ $? -eq 0 ]; then
 	exit
 fi
 
+cd install
+
 message "Increasing swapfile to 1Gb..."
 sudo dphys-swapfile swapoff
-sudo cp install/dphys-swapfile /etc/dphys-swapfile
+sudo cp dphys-swapfile /etc/dphys-swapfile
 sudo dphys-swapfile swapon
 
 message "Checking for updates..."
@@ -187,15 +189,14 @@ sudo apt-get install -y \
 #message "Installing adafruit servokit..."
 #sudo pip3 install adafruit-circuitpython-servokit
 
-message "Installing gpizero libraries..."
-sudo apt install -y \
-	python-gpiozero \
-	python3-gpiozero
+#message "Installing gpizero libraries..."
+#sudo apt install -y \
+#	python-gpiozero \
+#	python3-gpiozero
 
 message "Installing ROS compatible version of tinyxml2..."
 # required for rospack,
 # https://answers.ros.org/question/278733/rospack-find-throws-exception-error/?answer=279421#post-id-279421
-cd install
 git clone https://github.com/leethomason/tinyxml2.git
 cd tinyxml2
 mkdir build
@@ -204,16 +205,17 @@ cmake ..
 make 
 sudo make install
 cd ..
+cd ..
 
 message "Installing precompiled arm6l compatible version of opencv3 (raspi 0,1,2 compatible)..."
-#if [ ! -f ./install/opencv.deb]; then
-	curl -L -o opencv.deb "https://drive.google.com/uc?export=download&id=1i8RBgxMXuCMxyIPgjWoHWeX7xmEmuM23"
+#if [ ! -f ./opencv.deb]; then
+	curl -L -o ./opencv.deb "https://drive.google.com/uc?export=download&id=1i8RBgxMXuCMxyIPgjWoHWeX7xmEmuM23"
 #fi
 sudo dpkg -i --force-all ./opencv.deb
 
 message "Installing precompiled arm6l compatible version of ros melodic + perception + robot + joy(stick)..."
 #if [ ! -f ./install/ros_desktop.tar.bz2]; then
-	curl -L -o ros_desktop.tar.bz2 "https://drive.google.com/uc?export=download&id=1ffIgOm6M6TicZbAcWjK7va_A33rBHrs4"
+	curl -L -o ./ros_desktop.tar.bz2 "https://drive.google.com/uc?export=download&id=1ffIgOm6M6TicZbAcWjK7va_A33rBHrs4"
 #fi
 sudo tar xjf ./ros_desktop.tar.bz2 -C /
 # for some reason this is now required
@@ -245,6 +247,11 @@ sudo make install
 sudo create_ap -n wlan0 pi rospberry --mkconfig /etc/create_ap.conf
 #sudo systemctl enable create_ap
 #sudo systemctl start create_ap
+cd ..
+
+message "Adding desktop shortcut to autorun ifconfig to get IP address"
+mkdir ~/.config/autostart
+cp ifconfig.desktop ~/.config/autostart/
 
 message "Initializing ROS workspace..."
 mkdir /home/pi/ros
@@ -252,7 +259,7 @@ mkdir /home/pi/ros/src
 
 message "Configuring Samba filesharing..."
 sudo systemctl stop smbd
-sudo cp ./smb.conf /etc/samba/smb.conf
+sudo cp smb.conf /etc/samba/smb.conf
 sudo systemctl start smbd
 
 #message "Now, please enter in a samba (windows filesharing) password for use"
